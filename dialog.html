@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dialogo Flotante</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ececec;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .window {
+      width: 400px;
+      border: 1px solid #333;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      background-color: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .title-bar {
+      background-color: #0078D7;
+      color: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      cursor: move;
+    }
+
+    .title-bar button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+
+    button.action {
+      background-color: #0078D7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button.action:hover {
+      background-color: #005a9e;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="window" id="ventana">
+    <div class="title-bar" id="barra-titulo">
+      <span>Formulario Flotante</span>
+      <button onclick="cerrarVentana()">X</button>
+    </div>
+    <div class="content">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" placeholder="Ingresa tu nombre">
+
+      <button class="action" onclick="enviar()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    function cerrarVentana() {
+      Office.context.ui.messageParent("CERRAR");
+    }
+
+    function enviar() {
+      const nombre = document.getElementById('nombre').value;
+      Office.context.ui.messageParent(nombre);
+    }
+
+    // Opcional: hacer movible la ventana dentro del diálogo
+    const barraTitulo = document.getElementById('barra-titulo');
+    const ventana = document.getElementById('ventana');
+    let isDragging = false, offsetX, offsetY;
+
+    barraTitulo.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - ventana.offsetLeft;
+      offsetY = e.clientY - ventana.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        ventana.style.position = 'absolute';
+        ventana.style.left = (e.clientX - offsetX) + 'px';
+        ventana.style.top = (e.clientY - offsetY) + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  </script>
+
+</body>
+</html>
